@@ -52,3 +52,14 @@ def test_delete_item_endpoint():
     route = f"/delete/{item_id}"
     response = client.delete(url=route)
     assert response.status_code == 200
+
+# Test "/query/"
+def test_query_items_endpoint():
+    route = "/query/"
+    params = {
+        "skip": 1,
+        "limit": 3,
+        "price": 20
+    }
+    response = client.get(url=route, params=params)
+    assert response.status_code == 200

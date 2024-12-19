@@ -1,7 +1,8 @@
 from enum import Enum
 from typing import Optional, Union, Dict
-from fastapi import FastAPI, HTTPException
-from pydantic import BaseModel
+from typing_extensions import Annotated
+from fastapi import FastAPI, HTTPException, Query
+from pydantic import BaseModel, Field
 
 
 class Item(BaseModel):
@@ -11,14 +12,19 @@ class Item(BaseModel):
 	tax: Optional[float] = None
 
 class ItemUpdate(BaseModel):
-    name: Optional[str] = None
-    description: Optional[str] = None
-    price: Optional[float] = None
-    tax: Optional[float] = None
+	name: Optional[str] = None
+	description: Optional[str] = None
+	price: Optional[float] = None
+	tax: Optional[float] = None
 
 class ItemResponse(BaseModel):
 	message: str
 	item: Item
+
+class ItemQuery(BaseModel):
+	skip: int = Field(default=0, ge=0, lt=100)
+	limit: int = Field(default=10, ge=1, le=100)
+	price: Optional[float] = Field(default=None, gt=0.0)
 
 
 items = {
@@ -113,4 +119,15 @@ async def delete_item(
 		message="Item successfully deleted.",
 		item=deleted_item
 	)
+
+
+# Find item based on a query
+@app.get("/query/")
+async def item_query(
+	filter_query: Annotated[ItemQuery, Query()]
+) -> list[Item]:
+	
+	item_list = [item for item in items.values() if filter_query.price is None or item.price >= filter_query.price]
+	return item_list
+	
 
