@@ -1,1 +1,3 @@
 email-validator-venv
+.pytest_cache
+app/temp.py
