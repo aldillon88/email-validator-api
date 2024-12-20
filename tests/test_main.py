@@ -63,3 +63,21 @@ def test_query_items_endpoint():
     }
     response = client.get(url=route, params=params)
     assert response.status_code == 200
+
+# Test "/format-check/"
+def test_format_check_endpoint():
+    route = "/format-check/"
+    json = {
+        "email": "abc@gmail.com"
+    }
+    response = client.post(url=route, json=json)
+    assert response.status_code == 200
+
+# Test "/dns-check/"
+def test_dns_check_endpoint():
+    route = "/dns-check/"
+    json = {
+        "email": "abc@gmail.com"
+    }
+    response = client.post(url=route, json=json)
+    assert response.status_code == 200
